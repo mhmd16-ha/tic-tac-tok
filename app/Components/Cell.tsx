@@ -14,6 +14,8 @@ export default function Cell({go ,setGo,id,cells,setCells,cell,winMessage}:props
     if(winMessage){
       return
     }
+    let notToken=!cells[id]
+    if(notToken){
     if(go=="circle"){
       handleChange("circle")
       setGo("cross")
@@ -21,13 +23,14 @@ export default function Cell({go ,setGo,id,cells,setCells,cell,winMessage}:props
       handleChange("cross")
       setGo("circle")
     }
-    function handleChange(cellChange:string){
-     let copyCells=[...cells]
-     copyCells[id]=cellChange
-     setCells(copyCells)
-
-    }
   }
+  }
+  function handleChange(cellChange:string){
+    let copyCells=[...cells]
+    copyCells[id]=cellChange
+    setCells(copyCells)
+
+   }
   return (
     <div className={styles.cell} onClick={handleClick}>
     <h1 className={styles[cell]}>{cell?(cell==="cross"?"X":"O"):null}</h1>
