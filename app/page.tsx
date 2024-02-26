@@ -1,95 +1,47 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import Cell from "./Components/Cell";
 
 export default function Home() {
+  let win=[
+    [0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]
+  ]
+  let[cells,setCells]=useState(["","","","","","","","",""])
+  let [go,setGo]=useState("circle")
+  let[winMessage,setWinMessage]=useState("")
+  
+  function winTest(){
+    win.map((n)=>{
+      const winX=n.every((c)=>cells[c]==="cross")
+      const winy=n.every((c)=>cells[c]==="circle")
+      if(winX){
+        setWinMessage("cross Win !")
+      }else if(winy){
+        setWinMessage("circle win !")
+      }
+    }) 
+  }
+  useEffect(()=>{
+    winTest()
+  },[cells,winMessage])
+  useEffect(()=>{
+    if(cells.every((cell)=> cell!=="")&&!winMessage){
+      setWinMessage("Draw !")
+    }
+  },[cells,winMessage])
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <div className={styles.gameBord}>
+      {
+        cells.map((cell,i)=>{
+          return <Cell winMessage={winMessage} cell={cell} cells={cells} setCells={setCells} id={i} go={go} setGo={setGo} key={i}/>      
+        })
+      }
+    </div>
+    <h2 className={styles.mesaage}>{winMessage ? winMessage:  <span className={styles[go]}> it is turn of {go==="cross"?"X":"O"}</span>}</h2>
+    <a href="/">try agin !</a>
     </main>
   );
 }
